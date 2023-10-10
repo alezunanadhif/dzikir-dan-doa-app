@@ -24,7 +24,7 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/tv_dzikir_setiap_saat"
+        android:id="@+id/rv_dzikir_setiap_saat"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:listitem="@layout/row_item_dzikir_doa"

@@ -1,8 +1,10 @@
 package com.nadhif.doadzikirapp
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Gravity
+import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
@@ -11,13 +13,16 @@ import androidx.viewpager2.widget.ViewPager2
 import com.nadhif.doadzikirapp.adapter.ArtikelAdapter
 import com.nadhif.doadzikirapp.databinding.ActivityMainBinding
 import com.nadhif.doadzikirapp.model.ArtikelModel
+import com.nadhif.doadzikirapp.ui.DzikirDanDoaHarianActivity
+import com.nadhif.doadzikirapp.ui.DzikirPagiDanPetangActivity
+import com.nadhif.doadzikirapp.ui.DzikirSetiapSaatActivity
+import com.nadhif.doadzikirapp.ui.SunnahQouliyahActivity
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), View.OnClickListener {
 
 	private lateinit var binding: ActivityMainBinding
-	private lateinit var slideIndicator: Array<ImageView?>
-
-	private val listArtikel: ArrayList<ArtikelModel> = arrayListOf()
+	private lateinit var slideIndicator : Array<ImageView?>
+	private val  listArtikel: ArrayList<ArtikelModel> = arrayListOf()
 
 	private val slidingCallback = object : ViewPager2.OnPageChangeCallback() {
 		override fun onPageSelected(position: Int) {
@@ -26,6 +31,7 @@ class MainActivity : AppCompatActivity() {
 					ContextCompat.getDrawable(applicationContext, R.drawable.dot_inactive)
 				)
 			}
+
 
 			slideIndicator[position]?.setImageDrawable(
 				ContextCompat.getDrawable(applicationContext, R.drawable.dot_active)
@@ -38,26 +44,38 @@ class MainActivity : AppCompatActivity() {
 		super.onCreate(savedInstanceState)
 		installSplashScreen()
 		binding = ActivityMainBinding.inflate(layoutInflater)
+
 		setContentView(binding.root)
 
+
 		setDataArtikel()
-		setupViewPagerArtikel()
 		setView()
+		setUpViewPagerArtikel()
 
 	}
 
-	private fun setView() {
+	private fun  setView() {
+		//setup view artikel
 		binding.apply {
 			vpArtikel.adapter = ArtikelAdapter(listArtikel)
 			vpArtikel.registerOnPageChangeCallback(slidingCallback)
+
+			llDzikirDoaShalat.setOnClickListener(this@MainActivity)
+			llDzikirSetiapSaat.setOnClickListener(this@MainActivity)
+			llDzikirPagiPetang.setOnClickListener(this@MainActivity)
+			llDzikirDoaHarian.setOnClickListener(this@MainActivity)
 		}
 	}
 
-	private fun setDataArtikel() {
+
+
+
+	private  fun setDataArtikel() {
 		// bagian artikel
 		val titleArtikel = resources.getStringArray(R.array.arr_title_artikel)
 		val descArtikel = resources.getStringArray(R.array.arr_desc_artikel)
 		val imgArtikel = resources.obtainTypedArray(R.array.arr_img_artikel)
+
 
 		for (data in titleArtikel.indices) {
 			val artikel = ArtikelModel(
@@ -68,9 +86,11 @@ class MainActivity : AppCompatActivity() {
 			listArtikel.add(artikel)
 		}
 		imgArtikel.recycle()
+
+
 	}
 
-	private fun setupViewPagerArtikel() {
+	private fun setUpViewPagerArtikel() {
 		val llSliderDots = binding.llSliderDots
 
 		slideIndicator = arrayOfNulls(listArtikel.size)
@@ -82,6 +102,7 @@ class MainActivity : AppCompatActivity() {
 					applicationContext, R.drawable.dot_inactive
 				)
 			)
+
 
 			// menentukan lebar dan tinggi indicator
 			val params = LinearLayout.LayoutParams(
@@ -98,8 +119,7 @@ class MainActivity : AppCompatActivity() {
 
 		slideIndicator[0]?.setImageDrawable(
 			ContextCompat.getDrawable(
-				applicationContext, R.drawable.dot_active
-
+				applicationContext, R.drawable.dot_inactive
 			)
 		)
 	}
@@ -107,5 +127,26 @@ class MainActivity : AppCompatActivity() {
 	override fun onDestroy() {
 		super.onDestroy()
 		binding.vpArtikel.unregisterOnPageChangeCallback(slidingCallback)
+	}
+
+	override fun onClick(v: View?) {
+		when(v?.id){
+			R.id.ll_dzikir_doa_shalat -> {
+				val intentDDS = Intent(this@MainActivity, SunnahQouliyahActivity::class.java)
+				startActivity(intentDDS)
+			}
+			R.id.ll_dzikir_setiap_saat -> {
+				val intentDSS = Intent(this@MainActivity, DzikirSetiapSaatActivity::class.java)
+				startActivity(intentDSS)
+			}
+			R.id.ll_dzikir_doa_harian -> {
+				val intentDDH = Intent(this@MainActivity, DzikirDanDoaHarianActivity::class.java)
+				startActivity(intentDDH)
+			}
+			R.id.ll_dzikir_pagi_petang -> {
+				val intentDPP = Intent(this@MainActivity, DzikirPagiDanPetangActivity::class.java)
+				startActivity(intentDPP)
+			}
+		}
 	}
 }

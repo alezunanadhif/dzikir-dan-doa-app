@@ -32,6 +32,9 @@ class ArtikelAdapter(private val listArtikel: ArrayList<ArtikelModel>) :
 
 		holder.binding.imgFragment.setOnClickListener {
 			val intentDetail = Intent(holder.itemView.context, DetailArtikelActivity::class.java)
+			intentDetail.putExtra(DetailArtikelActivity.DETAIL_DESC, data.descArtikel)
+			intentDetail.putExtra(DetailArtikelActivity.DETAIL_TITLE, data.titleArtikel)
+			intentDetail.putExtra(DetailArtikelActivity.DETAIL_IMAGE, data.imageArtikel)
 			holder.itemView.context.startActivity(intentDetail)
 		}
 	}
